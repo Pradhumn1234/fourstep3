@@ -7,15 +7,27 @@ import dbConnect from '@/utils/db';
 // Determine the upload directory based on the environment
 const uploadDirectory = process.env.VERCEL ? '/tmp/uploads/TeamImages' : './public/uploads/TeamImages';
 
-// Ensure the directory exists (only on VPS)
-if (!process.env.VERCEL && !fs.existsSync(uploadDirectory)) {
-  fs.mkdirSync(uploadDirectory, { recursive: true });
+// Ensure directory exists (on Vercel, we create it inside /tmp, which is ephemeral)
+if (process.env.VERCEL) {
+  try {
+    // Ensure the directory exists inside /tmp (will be cleared after each function execution)
+    if (!fs.existsSync(uploadDirectory)) {
+      fs.mkdirSync(uploadDirectory, { recursive: true });
+    }
+  } catch (err) {
+    console.error('Error creating upload directory:', err);
+  }
+} else {
+  // On VPS, make sure the directory exists
+  if (!fs.existsSync(uploadDirectory)) {
+    fs.mkdirSync(uploadDirectory, { recursive: true });
+  }
 }
 
 // Configure Multer storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Use the directory based on the environment
+    // Use the directory based on the environment (Vercel or VPS)
     cb(null, uploadDirectory);
   },
   filename: (req, file, cb) => {

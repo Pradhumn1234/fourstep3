@@ -70,7 +70,7 @@ const ListofTeam = () => {
               <tr key={webinar._id} className="border border-black">
                 <td className="px-6 py-3 text-center border border-black">
                   <img
-                    src={process.env.DOMAIN+webinar?.path}
+                    src={webinar?.path}
                     alt={webinar?.altText}
                     className="h-16 w-16 object-cover rounded"
                   />

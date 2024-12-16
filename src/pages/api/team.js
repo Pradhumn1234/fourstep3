@@ -66,7 +66,7 @@ const apiRoute = async (req, res) => {
         path: process.env.VERCEL ? `/uploads/TeamImages/${req.file.filename}` : `/public/uploads/TeamImages/${req.file.filename}`,
       };
 
-      console.log('fileData------------------------------------> ', fileData);
+      // console.log('fileData------------------------------------> ', fileData);
 
       try {
         const file = await Teammember.create(fileData);
